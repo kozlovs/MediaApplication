@@ -1,7 +1,8 @@
-package ru.kozlovss.mediaapplication
+package ru.kozlovss.mediaapplication.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.kozlovss.mediaapplication.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
