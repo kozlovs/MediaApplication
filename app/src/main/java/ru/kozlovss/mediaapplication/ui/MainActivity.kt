@@ -13,6 +13,7 @@ import ru.kozlovss.mediaapplication.viewmodel.TracksViewModel
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         val viewModel by viewModels <TracksViewModel>()
         binding.playList.adapter = TrackAdapter(object : OnInteractionListener {
@@ -28,14 +29,13 @@ class MainActivity : AppCompatActivity() {
 
         subscribe(binding, viewModel)
 
-        setContentView(R.layout.activity_main)
+
     }
 
     private fun subscribe(binding: ActivityMainBinding, viewModel: TracksViewModel) {
         lifecycleScope.launchWhenCreated {
             viewModel.executableTrack.collect {
                 with(binding) {
-                    albumName.text = it?.albumName
                 }
             }
         }

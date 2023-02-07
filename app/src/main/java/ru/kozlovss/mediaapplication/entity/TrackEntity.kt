@@ -8,15 +8,13 @@ import ru.kozlovss.mediaapplication.dto.Track
 data class TrackEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val trackName: String,
-    val authorName: String,
-    val albumName: String
+    val file: String
 ) {
     companion object {
         fun fromDto(track: Track) = with(track) {
-            TrackEntity(id, trackName, authorName, albumName)
+            TrackEntity(id, file)
         }
     }
 
-    fun toDto() = Track(id, trackName, authorName, albumName)
+    fun toDto() = Track(id, file)
 }
