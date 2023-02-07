@@ -22,7 +22,7 @@ class TrackViewHolder(
     private fun setListeners(binding: CardTrackBinding, track: Track) = with(binding) {
         playPauseButton
         .setOnClickListener {
-            if (true) {
+            if (true) {//todo указать условие
                 onInteractionListener.onPlay(track)
             } else {
                 onInteractionListener.onPause(track)
