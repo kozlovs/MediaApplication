@@ -12,9 +12,7 @@ class TrackViewHolder(
 
     fun bind(track: Track)  {
         binding.apply {
-            trackName.text = track.trackName
-            albumName.text = track.albumName
-
+            trackName.text = track.file
         }
         setListeners(binding, track)
     }

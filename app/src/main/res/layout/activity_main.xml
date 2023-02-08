@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/album_title"
+            android:id="@+id/album_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,37 +22,28 @@
             tools:text="Альбом" />
 
         <TextView
-            android:id="@+id/album_name"
+            android:id="@+id/album_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="32sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_title"
+            app:layout_constraintTop_toBottomOf="@id/album_subtitle"
             tools:text="The Slim Shady LP" />
 
         <TextView
-            android:id="@+id/author_title"
+            android:id="@+id/artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_name"
+            app:layout_constraintTop_toBottomOf="@id/album_title"
             tools:text="Исполнитель" />
 
         <TextView
-            android:id="@+id/author_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/author_title"
-            app:layout_constraintTop_toBottomOf="@id/album_name"
-            tools:text="Исполнитель" />
-
-        <TextView
-            android:id="@+id/album_year"
+            android:id="@+id/published"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/author_title"
+            app:layout_constraintTop_toBottomOf="@id/artist"
             tools:text="1998" />
 
         <TextView
@@ -60,8 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/album_year"
-            app:layout_constraintTop_toBottomOf="@id/author_title"
+            app:layout_constraintStart_toEndOf="@id/published"
+            app:layout_constraintTop_toBottomOf="@id/artist"
             tools:text="рэп" />
 
         <Button
@@ -72,7 +63,7 @@
             android:layout_marginTop="16dp"
             app:icon="@drawable/baseline_play_arrow_24"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_year"
+            app:layout_constraintTop_toBottomOf="@id/published"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@ import ru.kozlovss.mediaapplication.dto.Track
 
 @Entity
 data class TrackEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val file: String
 ) {
