@@ -1,15 +1,18 @@
 package ru.kozlovss.mediaapplication.viewmodel
 
-import android.app.Application
-import android.media.MediaPlayer
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.kozlovss.mediaapplication.R
 import ru.kozlovss.mediaapplication.dto.Album
 import ru.kozlovss.mediaapplication.dto.Track
+import ru.kozlovss.mediaapplication.repository.MediaRepository
+import javax.inject.Inject
 
-class MediaViewModel(private val context: Application) : AndroidViewModel(context) {
+@HiltViewModel
+class MediaViewModel @Inject constructor(
+    repository: MediaRepository
+    ) : ViewModel() {
 
     private val _album = MutableStateFlow<Album?>(null)
     val album: StateFlow<Album?>
@@ -22,7 +25,7 @@ class MediaViewModel(private val context: Application) : AndroidViewModel(contex
 //    private val repository:
 
     fun playTrack(track: Track) {
-       // MediaPlayer.create(context, R.raw.).start()
+        // MediaPlayer.create(context, R.raw.).start()
     }
 
     fun pauseTrack(track: Track) {

@@ -1,5 +1,6 @@
 package ru.kozlovss.mediaapplication.entity
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.kozlovss.mediaapplication.dto.Album
@@ -14,13 +15,18 @@ data class AlbumEntity(
     val artist: String,
     val published: String,
     val genre: String,
-    val tracks: List<Track>
+//    @Embedded
+//    val tracks: List<Track>? = null
 ) {
     companion object {
         fun fromDto(album: Album) = with(album) {
-            AlbumEntity(id, title, subtitle, artist, published, genre, tracks)
+            AlbumEntity(id, title, subtitle, artist, published, genre)
         }
     }
 
-    fun toDto() = Album(id, title, subtitle, artist, published, genre, tracks)
+    fun toDto() = Album(id, title, subtitle, artist, published, genre)
 }
+
+fun List<AlbumEntity>.toDto() = map(AlbumEntity::toDto)
+
+fun List<Album>.toEntity() = map(AlbumEntity::fromDto)

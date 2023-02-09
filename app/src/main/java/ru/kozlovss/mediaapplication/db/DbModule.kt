@@ -2,6 +2,7 @@ package ru.kozlovss.mediaapplication.db
 
 import android.content.Context
 import androidx.room.Room
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -10,6 +11,7 @@ import ru.kozlovss.mediaapplication.dao.AlbumDao
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
+@Module
 class DbModule {
 
     @Singleton

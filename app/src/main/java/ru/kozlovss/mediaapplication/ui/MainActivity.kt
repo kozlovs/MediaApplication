@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
 import ru.kozlovss.mediaapplication.R
 import ru.kozlovss.mediaapplication.adapter.TrackAdapter
 import ru.kozlovss.mediaapplication.databinding.ActivityMainBinding
 import ru.kozlovss.mediaapplication.dto.Track
 import ru.kozlovss.mediaapplication.viewmodel.MediaViewModel
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     published.text = it?.published
                     genre.text = it?.genre
                 }
-                adapter.submitList(it?.tracks)
+                //adapter.submitList(it?.tracks)
             }
         }
     }
