@@ -1,28 +1,38 @@
 package ru.kozlovss.mediaapplication.viewmodel
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import ru.kozlovss.mediaapplication.dto.Album
 import ru.kozlovss.mediaapplication.dto.Track
 import ru.kozlovss.mediaapplication.repository.MediaRepository
-import javax.inject.Inject
+import ru.kozlovss.mediaapplication.repository.MediaRepositoryImpl
 
-@HiltViewModel
-class MediaViewModel @Inject constructor(
-    repository: MediaRepository
-    ) : ViewModel() {
+class MediaViewModel : ViewModel() {
 
-    private val _album = MutableStateFlow<Album?>(null)
-    val album: StateFlow<Album?>
+    private val repository: MediaRepository = MediaRepositoryImpl()
+    private val _album = MutableLiveData<Album?>(null)
+    val album: LiveData<Album?>
         get() = _album
 
-    private val _executableTrack = MutableStateFlow<Track?>(null)
-    val executableTrack: StateFlow<Track?>
-        get() = _executableTrack
+    init {
+        loadAlbum()
+    }
 
-//    private val repository:
+    private fun loadAlbum() {
+        repository.getAlbumAsync(
+            object : MediaRepository.Callback<Album> {
+                override fun onSuccess(result: Album) {
+                    _album.postValue(result)
+                }
+
+                override fun onError(e: Exception) {
+                    throw RuntimeException("Альбом не загружен")
+                }
+            }
+        )
+    }
 
     fun playTrack(track: Track) {
         // MediaPlayer.create(context, R.raw.).start()

@@ -3,22 +3,20 @@ package ru.kozlovss.mediaapplication.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import dagger.hilt.android.AndroidEntryPoint
-import ru.kozlovss.mediaapplication.R
 import ru.kozlovss.mediaapplication.adapter.TrackAdapter
 import ru.kozlovss.mediaapplication.databinding.ActivityMainBinding
 import ru.kozlovss.mediaapplication.dto.Track
 import ru.kozlovss.mediaapplication.viewmodel.MediaViewModel
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel by viewModels<MediaViewModel>()
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        val viewModel by viewModels <MediaViewModel>()
+
         val adapter = TrackAdapter(object : OnInteractionListener {
             override fun onPlay(track: Track) {
                 viewModel.playTrack(track)
@@ -27,25 +25,20 @@ class MainActivity : AppCompatActivity() {
             override fun onPause(track: Track) {
                 viewModel.pauseTrack(track)
             }
-
         })
         binding.playList.adapter = adapter
-        subscribe(binding, viewModel, adapter)
-
-
-    }
-
-    private fun subscribe(binding: ActivityMainBinding, viewModel: MediaViewModel, adapter: TrackAdapter) {
-        lifecycleScope.launchWhenCreated {
-            viewModel.album.collect {
-                with(binding) {
-                    albumTitle.text = it?.title
-                    albumSubtitle.text = it?.subtitle
-                    artist.text = it?.artist
-                    published.text = it?.published
-                    genre.text = it?.genre
+        viewModel.album.observe(this) {
+            it?.let {
+                binding.apply {
+                    albumTitle.text = it.title
+                    albumSubtitle.text = it.subtitle
+                    artist.text = it.artist
+                    published.text = it.published
+                    genre.text = it.genre
                 }
-                //adapter.submitList(it?.tracks)
+                it.tracks?.let { trackList ->
+                    adapter.submitList(trackList)
+                }
             }
         }
     }

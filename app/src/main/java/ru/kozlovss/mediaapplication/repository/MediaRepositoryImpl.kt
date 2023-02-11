@@ -1,35 +1,50 @@
 package ru.kozlovss.mediaapplication.repository
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import okhttp3.Dispatcher
-import ru.kozlovss.mediaapplication.api.ApiModule.Companion.BASE_URL
-import ru.kozlovss.mediaapplication.api.ApiService
-import ru.kozlovss.mediaapplication.dao.AlbumDao
-import ru.kozlovss.mediaapplication.db.AppDb
+import com.google.gson.Gson
+import okhttp3.*
 import ru.kozlovss.mediaapplication.dto.Album
-import ru.kozlovss.mediaapplication.entity.AlbumEntity
-import ru.kozlovss.mediaapplication.entity.toDto
-import javax.inject.Inject
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
-class MediaRepositoryImpl @Inject constructor(
-    private val albumDao: AlbumDao,
-    private val apiService: ApiService,
-    appDb: AppDb
-) : MediaRepository {
+class MediaRepositoryImpl : MediaRepository {
 
-    override val album: Flow<List<Album>> = albumDao
-        .getAlbum()
-        .map(List<AlbumEntity>::toDto)
-        .flowOn(Dispatchers.Default)
+    private val gson = Gson()
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .build()
 
-    override fun getAll() {
+    override suspend fun getTrack() {
         TODO("Not yet implemented")
     }
 
+    override fun getAlbumAsync(callback: MediaRepository.Callback<Album>) {
+        val request: Request = Request.Builder()
+            .url(ALBUM_URL)
+            .build()
+
+        okHttpClient.newCall(request)
+            .enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val body = response.body?.string() ?: throw RuntimeException("body is null")
+                    try {
+                        callback.onSuccess(gson.fromJson(body, Album::class.java))
+                    } catch (e: Exception) {
+                        throw RuntimeException("Альбом не загружен")
+                    }
+                }
+            })
+    }
+
     companion object {
-        fun getTrackUrl(trackUrl: String) = "${BASE_URL}"//todo переделать
+        private const val ALBUM_URL =
+            "https://github.com/netology-code/andad-homeworks/raw/master/09_multimedia/data/album.json"
+        private const val TRACK_URL =
+            "https://raw.githubusercontent.com/netology-code/andad-homeworks/master/09_multimedia/data/"
+
+        fun getTrackUrl(trackUrl: String) = "${TRACK_URL}$trackUrl"
     }
 }

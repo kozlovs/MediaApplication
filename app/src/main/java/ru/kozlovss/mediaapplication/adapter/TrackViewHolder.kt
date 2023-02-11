@@ -14,12 +14,11 @@ class TrackViewHolder(
         binding.apply {
             trackName.text = track.file
         }
-        setListeners(binding, track)
+        setListeners(track)
     }
 
-    private fun setListeners(binding: CardTrackBinding, track: Track) = with(binding) {
-        playPauseButton
-        .setOnClickListener {
+    private fun setListeners(track: Track) = with(binding) {
+        playPauseButton.setOnClickListener {
             if (true) {//todo указать условие
                 onInteractionListener.onPlay(track)
             } else {

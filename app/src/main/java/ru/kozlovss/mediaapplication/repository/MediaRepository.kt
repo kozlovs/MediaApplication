@@ -1,10 +1,13 @@
 package ru.kozlovss.mediaapplication.repository
 
-import kotlinx.coroutines.flow.Flow
 import ru.kozlovss.mediaapplication.dto.Album
 
 interface MediaRepository {
-    val album: Flow<List<Album>>
+    suspend fun getTrack()
+    abstract fun getAlbumAsync(callback: Callback<Album>)
 
-    fun getAll()
+    interface Callback<T> {
+        fun onSuccess(result: T)
+        fun onError(e: Exception)
+    }
 }
