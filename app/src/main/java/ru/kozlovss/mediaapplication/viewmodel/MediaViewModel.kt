@@ -25,14 +25,7 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
 
     val track = MutableLiveData<Track?>(null)
 
-    private var mediaPlayer = MediaPlayer().apply {
-        setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
-        )
-    }
+    private var mediaPlayer: MediaPlayer? = null
 
     init {
         clearTrack()
@@ -55,9 +48,8 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
 
     private fun setTrackToPlayer() {
         val trackUrl = repository.getTrackUrl(track.value!!.file)
-        mediaPlayer.stop()
-        mediaPlayer.setDataSource(trackUrl)
-        mediaPlayer.prepare()
+        mediaPlayer?.setDataSource(trackUrl)
+        mediaPlayer?.prepare()
     }
 
     private fun clearTrack() {
@@ -69,6 +61,32 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     fun play(newTrack: Track? = null) {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                setOnCompletionListener {
+                    playerStop()
+                }
+            }
+        } else {
+            playerStop()
+            mediaPlayer = MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                setOnCompletionListener {
+                    playerStop()
+                }
+            }
+        }
         newTrack?.let {
             if (track.value != newTrack) {
                 track.value = newTrack
@@ -78,13 +96,18 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         _isPlaying.value = true
     }
 
+    private fun playerStop() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
     fun playerPlay() {
         Log.d("MyLog", "Play track")
-        mediaPlayer.start()
+        mediaPlayer?.start()
     }
 
     fun playerPause() {
         Log.d("MyLog", "Pause track")
-        mediaPlayer.pause()
+        mediaPlayer?.pause()
     }
 }
