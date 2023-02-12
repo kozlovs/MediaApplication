@@ -8,4 +8,6 @@ interface OnInteractionListener {
     fun onPause()
 
     fun isPlay(): Boolean
+
+    fun isTrackSet(track: Track): Boolean
 }

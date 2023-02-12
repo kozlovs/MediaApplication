@@ -13,6 +13,7 @@ class TrackViewHolder(
     fun bind(track: Track)  {
         binding.apply {
             trackName.text = track.file
+            binding.playPauseButton.isChecked = onInteractionListener.isTrackSet(track) && onInteractionListener.isPlay()
         }
         setListeners(track)
     }

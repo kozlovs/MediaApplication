@@ -28,6 +28,10 @@ class MainActivity : AppCompatActivity() {
             override fun isPlay() : Boolean {
                 return viewModel.isPlaying.value == true
             }
+
+            override fun isTrackSet(track: Track): Boolean {
+                return viewModel.isTrackSet(track)
+            }
         })
         binding.playList.adapter = adapter
 

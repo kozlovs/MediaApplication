@@ -74,16 +74,20 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
                 }
             }
         } else {
-            playerStop()
-            mediaPlayer = MediaPlayer().apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                setOnCompletionListener {
+            newTrack?.let {
+                if (!isTrackSet(it)) {
                     playerStop()
+                    mediaPlayer = MediaPlayer().apply {
+                        setAudioAttributes(
+                            AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                        )
+                        setOnCompletionListener {
+                            playerStop()
+                        }
+                    }
                 }
             }
         }
@@ -109,5 +113,9 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     fun playerPause() {
         Log.d("MyLog", "Pause track")
         mediaPlayer?.pause()
+    }
+
+    fun isTrackSet(checkedTrack: Track): Boolean {
+        return track.value == checkedTrack
     }
 }
