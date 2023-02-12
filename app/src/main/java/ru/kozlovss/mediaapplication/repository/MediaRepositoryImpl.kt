@@ -13,9 +13,7 @@ class MediaRepositoryImpl : MediaRepository {
         .connectTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    override suspend fun getTrack() {
-        TODO("Not yet implemented")
-    }
+    override fun getTrackUrl(trackName: String) = "${TRACK_URL}$trackName"
 
     override fun getAlbumAsync(callback: MediaRepository.Callback<Album>) {
         val request: Request = Request.Builder()
@@ -44,7 +42,5 @@ class MediaRepositoryImpl : MediaRepository {
             "https://github.com/netology-code/andad-homeworks/raw/master/09_multimedia/data/album.json"
         private const val TRACK_URL =
             "https://raw.githubusercontent.com/netology-code/andad-homeworks/master/09_multimedia/data/"
-
-        fun getTrackUrl(trackUrl: String) = "${TRACK_URL}$trackUrl"
     }
 }

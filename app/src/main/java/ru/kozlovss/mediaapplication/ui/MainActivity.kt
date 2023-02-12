@@ -16,17 +16,33 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         val adapter = TrackAdapter(object : OnInteractionListener {
             override fun onPlay(track: Track) {
-                viewModel.playTrack(track)
+                viewModel.play(track)
             }
 
-            override fun onPause(track: Track) {
-                viewModel.pauseTrack(track)
+            override fun onPause() {
+                viewModel.pause()
+            }
+
+            override fun isPlay() : Boolean {
+                return viewModel.isPlaying()
             }
         })
         binding.playList.adapter = adapter
+
+        binding.playPauseButton.setOnClickListener {
+            if (viewModel.isPlaying()) {
+                viewModel.pause()
+            } else {
+                viewModel.play()
+            }
+        }
+
+        subscribe(adapter)
+    }
+
+    private fun subscribe(adapter: TrackAdapter) {
         viewModel.album.observe(this) {
             it?.let {
                 binding.apply {
@@ -39,6 +55,12 @@ class MainActivity : AppCompatActivity() {
                 it.tracks?.let { trackList ->
                     adapter.submitList(trackList)
                 }
+            }
+        }
+
+        viewModel.track.observe(this) {
+            it?.let {
+                viewModel.setTrackToPlayer()
             }
         }
     }

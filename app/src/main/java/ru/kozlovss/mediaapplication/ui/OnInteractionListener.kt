@@ -5,5 +5,7 @@ import ru.kozlovss.mediaapplication.dto.Track
 interface OnInteractionListener {
     fun onPlay(track: Track)
 
-    fun onPause(track: Track)
+    fun onPause()
+
+    fun isPlay(): Boolean
 }

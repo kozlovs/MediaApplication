@@ -3,7 +3,7 @@ package ru.kozlovss.mediaapplication.repository
 import ru.kozlovss.mediaapplication.dto.Album
 
 interface MediaRepository {
-    suspend fun getTrack()
+    fun getTrackUrl(trackName: String): String
     abstract fun getAlbumAsync(callback: Callback<Album>)
 
     interface Callback<T> {
