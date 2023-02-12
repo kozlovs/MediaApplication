@@ -3,6 +3,7 @@ package ru.kozlovss.mediaapplication.viewmodel
 import android.app.Application
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +18,10 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     private val _album = MutableLiveData<Album?>(null)
     val album: LiveData<Album?>
         get() = _album
+
+    private val _isPlaying = MutableLiveData(false)
+    val isPlaying: LiveData<Boolean>
+        get() = _isPlaying
 
     val track = MutableLiveData<Track?>(null)
 
@@ -48,9 +53,11 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         )
     }
 
-    fun setTrackToPlayer () {
+    private fun setTrackToPlayer() {
         val trackUrl = repository.getTrackUrl(track.value!!.file)
+        mediaPlayer.stop()
         mediaPlayer.setDataSource(trackUrl)
+        mediaPlayer.prepare()
     }
 
     private fun clearTrack() {
@@ -58,17 +65,26 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     fun pause() {
-        mediaPlayer.pause()
+        _isPlaying.value = false
     }
 
     fun play(newTrack: Track? = null) {
         newTrack?.let {
             if (track.value != newTrack) {
                 track.value = newTrack
+                setTrackToPlayer()
             }
         }
+        _isPlaying.value = true
+    }
+
+    fun playerPlay() {
+        Log.d("MyLog", "Play track")
         mediaPlayer.start()
     }
 
-    fun isPlaying() = mediaPlayer.isPlaying
+    fun playerPause() {
+        Log.d("MyLog", "Pause track")
+        mediaPlayer.pause()
+    }
 }

@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun isPlay() : Boolean {
-                return viewModel.isPlaying()
+                return viewModel.isPlaying.value == true
             }
         })
         binding.playList.adapter = adapter
 
         binding.playPauseButton.setOnClickListener {
-            if (viewModel.isPlaying()) {
+            if (viewModel.isPlaying.value == true) {
                 viewModel.pause()
             } else {
                 viewModel.play()
@@ -60,8 +60,18 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.track.observe(this) {
             it?.let {
-                viewModel.setTrackToPlayer()
+                //viewModel.setTrackToPlayer()
             }
+        }
+
+        viewModel.isPlaying.observe(this) { isPlaying ->
+            if (isPlaying) {
+                viewModel.playerPlay()
+            }
+            else {
+                viewModel.playerPause()
+            }
+            binding.playPauseButton.isChecked = isPlaying
         }
     }
 }
