@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:paddingTop="8dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     tools:context=".ui.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout

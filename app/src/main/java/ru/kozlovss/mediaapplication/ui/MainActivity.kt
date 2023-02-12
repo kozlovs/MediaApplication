@@ -2,6 +2,7 @@ package ru.kozlovss.mediaapplication.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import ru.kozlovss.mediaapplication.adapter.TrackAdapter
 import ru.kozlovss.mediaapplication.databinding.ActivityMainBinding
@@ -76,6 +77,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.playerPause()
             }
             binding.playPauseButton.isChecked = isPlaying
+            Log.d("MyLog", "isPlaying.observe")
+            adapter.submitList(viewModel.album.value?.tracks)
         }
     }
 }

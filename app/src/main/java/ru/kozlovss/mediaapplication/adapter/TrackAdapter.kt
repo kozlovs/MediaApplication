@@ -1,5 +1,6 @@
 package ru.kozlovss.mediaapplication.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -15,6 +16,7 @@ class TrackAdapter(private val onInteractionListener: OnInteractionListener) :
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+        Log.d("MyLog", "onBindViewHolder")
         val track = getItem(position)
         holder.bind(track)
     }

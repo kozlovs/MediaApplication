@@ -3,7 +3,6 @@ package ru.kozlovss.mediaapplication.viewmodel
 import android.app.Application
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,12 +45,6 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         )
     }
 
-    private fun setTrackToPlayer() {
-        val trackUrl = repository.getTrackUrl(track.value!!.file)
-        mediaPlayer?.setDataSource(trackUrl)
-        mediaPlayer?.prepare()
-    }
-
     private fun clearTrack() {
         track.value = null
     }
@@ -62,60 +55,57 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
 
     fun play(newTrack: Track? = null) {
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer().apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-                setOnCompletionListener {
-                    playerStop()
-                }
-            }
+            initializePlayer()
         } else {
             newTrack?.let {
                 if (!isTrackSet(it)) {
                     playerStop()
-                    mediaPlayer = MediaPlayer().apply {
-                        setAudioAttributes(
-                            AudioAttributes.Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .setUsage(AudioAttributes.USAGE_MEDIA)
-                                .build()
-                        )
-                        setOnCompletionListener {
-                            playerStop()
-                        }
-                    }
+                    initializePlayer()
                 }
             }
         }
         newTrack?.let {
-            if (track.value != newTrack) {
-                track.value = newTrack
-                setTrackToPlayer()
+            if (!isTrackSet(it)) {
+                setTrackToPlayer(newTrack)
             }
         }
         _isPlaying.value = true
     }
 
+    private fun initializePlayer() {
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setOnCompletionListener {
+                playerStop()
+            }
+        }
+    }
+
+    private fun setTrackToPlayer(newTrack: Track) {
+        track.value = newTrack
+        val trackUrl = repository.getTrackUrl(track.value!!.file)
+        mediaPlayer?.setDataSource(trackUrl)
+        mediaPlayer?.prepare()
+    }
+
     private fun playerStop() {
         mediaPlayer?.release()
         mediaPlayer = null
+        clearTrack()
     }
 
     fun playerPlay() {
-        Log.d("MyLog", "Play track")
         mediaPlayer?.start()
     }
 
     fun playerPause() {
-        Log.d("MyLog", "Pause track")
         mediaPlayer?.pause()
     }
 
-    fun isTrackSet(checkedTrack: Track): Boolean {
-        return track.value == checkedTrack
-    }
+    fun isTrackSet(checkedTrack: Track) = track.value == checkedTrack
 }
