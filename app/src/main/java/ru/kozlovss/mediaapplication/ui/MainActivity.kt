@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.track.observe(this) {
             it?.let {
-                //viewModel.setTrackToPlayer()
+                binding.currentTrack.text = it.file
             }
         }
 

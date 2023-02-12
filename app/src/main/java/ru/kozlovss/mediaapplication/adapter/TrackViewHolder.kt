@@ -20,7 +20,7 @@ class TrackViewHolder(
 
     private fun setListeners(track: Track) = with(binding) {
         playPauseButton.setOnClickListener {
-            if (onInteractionListener.isPlay()) {
+            if (onInteractionListener.isPlay() && onInteractionListener.isTrackSet(track)) {
                 onInteractionListener.onPause()
             } else {
                 onInteractionListener.onPlay(track)
