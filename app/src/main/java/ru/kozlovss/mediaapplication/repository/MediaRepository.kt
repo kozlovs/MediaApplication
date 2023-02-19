@@ -4,7 +4,7 @@ import ru.kozlovss.mediaapplication.dto.Album
 
 interface MediaRepository {
     fun getTrackUrl(trackName: String): String
-    abstract fun getAlbumAsync(callback: Callback<Album>)
+    fun getAlbumAsync(callback: Callback<Album>)
 
     interface Callback<T> {
         fun onSuccess(result: T)
