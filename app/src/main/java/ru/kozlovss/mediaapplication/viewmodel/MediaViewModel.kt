@@ -46,19 +46,24 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         )
     }
 
-    private fun clearTrack() {
-        track.value = null
+    fun switch(newTrack: Track? = null) {
+        album.value?.let {
+            if (mediaPlayer == null) initializePlayer()
+            if (mediaPlayer?.isPlaying == true && newTrack != null && isTrackSet(newTrack)) {
+                pause()
+            } else {
+                play(newTrack)
+            }
+        }
     }
 
-    fun pause() {
+    private fun pause() {
        // changeState(null)
         mediaPlayer?.pause()
         _isPlaying.value = false
     }
 
-    fun play(newTrack: Track? = null) {
-        if (album.value == null) return
-        if (mediaPlayer == null) initializePlayer()
+    private fun play(newTrack: Track? = null) {
         if (newTrack == null && track.value == null) {
             album.value?.tracks?.get(0)?.let { setTrackToPlayer(it) }
         }
@@ -117,11 +122,15 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         mediaPlayer?.prepare()
     }
 
+    private fun clearTrack() {
+        track.value = null
+    }
+
+    private fun isTrackSet(checkedTrack: Track) = track.value == checkedTrack
+
     private fun playerStop() {
         mediaPlayer?.release()
         mediaPlayer = null
         clearTrack()
     }
-
-    fun isTrackSet(checkedTrack: Track) = track.value == checkedTrack
 }

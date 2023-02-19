@@ -3,11 +3,5 @@ package ru.kozlovss.mediaapplication.ui
 import ru.kozlovss.mediaapplication.dto.Track
 
 interface OnInteractionListener {
-    fun onPlay(track: Track)
-
-    fun onPause()
-
-    fun isPlay(): Boolean
-
-    fun isTrackSet(track: Track): Boolean
+    fun switch(track: Track)
 }

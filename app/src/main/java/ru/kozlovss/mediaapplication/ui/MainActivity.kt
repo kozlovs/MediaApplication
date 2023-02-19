@@ -2,7 +2,6 @@ package ru.kozlovss.mediaapplication.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import ru.kozlovss.mediaapplication.adapter.TrackAdapter
 import ru.kozlovss.mediaapplication.databinding.ActivityMainBinding
@@ -18,30 +17,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val adapter = TrackAdapter(object : OnInteractionListener {
-            override fun onPlay(track: Track) {
-                viewModel.play(track)
-            }
-
-            override fun onPause() {
-                viewModel.pause()
-            }
-
-            override fun isPlay() : Boolean {
-                return viewModel.isPlaying.value == true
-            }
-
-            override fun isTrackSet(track: Track): Boolean {
-                return viewModel.isTrackSet(track)
+            override fun switch(track: Track) {
+                viewModel.switch(track)
             }
         })
         binding.playList.adapter = adapter
 
         binding.playPauseButton.setOnClickListener {
-            if (viewModel.isPlaying.value == true) {
-                viewModel.pause()
-            } else {
-                viewModel.play()
-            }
+            viewModel.switch(null)
         }
 
         subscribe(adapter)
