@@ -49,10 +49,22 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     fun switch(newTrack: Track? = null) {
         album.value?.let {
             if (mediaPlayer == null) initializePlayer()
-            if (mediaPlayer?.isPlaying == true && newTrack != null && isTrackSet(newTrack)) {
-                pause()
+            if (newTrack == null) {
+                if (mediaPlayer?.isPlaying == true) {
+                    pause()
+                } else {
+                    play()
+                }
             } else {
-                play(newTrack)
+                if (!isTrackSet(newTrack)) {
+                    play(newTrack)
+                } else {
+                    if (mediaPlayer?.isPlaying == true) {
+                        pause()
+                    } else {
+                        play()
+                    }
+                }
             }
         }
     }
