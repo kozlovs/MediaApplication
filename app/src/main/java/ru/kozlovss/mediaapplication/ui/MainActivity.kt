@@ -70,15 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.isPlaying.observe(this) { isPlaying ->
-            if (isPlaying) {
-                viewModel.playerPlay()
-            }
-            else {
-                viewModel.playerPause()
-            }
             binding.playPauseButton.isChecked = isPlaying
-            Log.d("MyLog", "isPlaying.observe")
-            adapter.submitList(viewModel.album.value?.tracks)
         }
     }
 }

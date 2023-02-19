@@ -13,10 +13,8 @@ class TrackViewHolder(
 
     fun bind(track: Track) {
         binding.apply {
-            val isPlaying = onInteractionListener.isTrackSet(track) && onInteractionListener.isPlay()
-            Log.d("MyLog", "isPlaying ${track.file} $isPlaying")
             trackName.text = track.file
-            binding.playPauseButton.isChecked = isPlaying
+            binding.playPauseButton.isChecked = track.isPlaying
         }
         setListeners(track)
     }

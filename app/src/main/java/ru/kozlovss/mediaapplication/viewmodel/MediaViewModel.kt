@@ -3,6 +3,7 @@ package ru.kozlovss.mediaapplication.viewmodel
 import android.app.Application
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,19 +51,49 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     fun pause() {
+       // changeState(null)
+        mediaPlayer?.pause()
         _isPlaying.value = false
     }
 
     fun play(newTrack: Track? = null) {
-        if (mediaPlayer == null) {
-            initializePlayer()
+        if (album.value == null) return
+        if (mediaPlayer == null) initializePlayer()
+        if (newTrack == null && track.value == null) {
+            album.value?.tracks?.get(0)?.let { setTrackToPlayer(it) }
         }
         if (newTrack != null && !isTrackSet(newTrack)) {
             playerStop()
             initializePlayer()
             setTrackToPlayer(newTrack)
         }
+        //changeState(newTrack)
+        mediaPlayer?.start()
         _isPlaying.value = true
+    }
+
+    private fun changeState(newTrack: Track?) {
+        val newTrackList = _album.value?.tracks!!.toMutableList()
+        val index = newTrackList.indexOf(track.value)
+        Log.d("MyLog", "Index track: $index")
+        if (_isPlaying.value == true) {
+            track.value?.let {
+                newTrackList[index] = track.value?.copy(isPlaying = true)!!
+            }
+
+//            newTrack?.let {
+//                val newTrackIndex = newTrackList.indexOf(newTrack)
+//                newTrackList[newTrackIndex] = newTrack.copy(isPlaying = true)
+//            }
+
+        } else {
+            track.value?.let {
+                newTrackList[index] = track.value?.copy(isPlaying = false)!!
+            }
+        }
+        _album.value = album.value?.copy(
+            tracks = newTrackList
+        )
     }
 
     private fun initializePlayer() {
@@ -90,14 +121,6 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         mediaPlayer?.release()
         mediaPlayer = null
         clearTrack()
-    }
-
-    fun playerPlay() {
-        mediaPlayer?.start()
-    }
-
-    fun playerPause() {
-        mediaPlayer?.pause()
     }
 
     fun isTrackSet(checkedTrack: Track) = track.value == checkedTrack
