@@ -3,6 +3,7 @@ package ru.kozlovss.mediaapplication.viewmodel
 import android.app.Application
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,16 +54,23 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
                     pause()
                 } else {
                     play()
+                    Log.d("MyLog", "play1")
                 }
             } else {
-                if (!isTrackSet(newTrack)) {
-                    play(newTrack)
-                } else {
+                val isTrackSet = isTrackSet(newTrack)
+                Log.d("MyLog", "isTrackSet $isTrackSet")
+                Log.d("MyLog", "Seted Track ${track.value}")
+                Log.d("MyLog", "New Track ${newTrack}")
+                if (isTrackSet) {
                     if (mediaPlayer?.isPlaying == true) {
                         pause()
                     } else {
                         play()
+                        Log.d("MyLog", "play2")
                     }
+                } else {
+                    play(newTrack)
+                    Log.d("MyLog", "play3")
                 }
             }
         }
@@ -88,6 +96,7 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
 
     private fun changeState() {
         _isPlaying.value = mediaPlayer?.isPlaying
+        Log.d("MyLog", "is playing: ${mediaPlayer?.isPlaying}")
         val newTracks = _album.value?.tracks!!.toMutableList()
         album.value?.tracks?.let { list ->
             list.forEachIndexed { index, t ->
@@ -126,7 +135,7 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
         track.value = null
     }
 
-    private fun isTrackSet(checkedTrack: Track) = track.value == checkedTrack
+    private fun isTrackSet(checkedTrack: Track) = track.value?.id == checkedTrack.id
 
     private fun playerStop() {
         mediaPlayer?.release()
