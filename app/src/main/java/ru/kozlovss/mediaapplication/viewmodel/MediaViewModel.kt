@@ -3,7 +3,6 @@ package ru.kozlovss.mediaapplication.viewmodel
 import android.app.Application
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -70,9 +69,8 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
     }
 
     private fun pause() {
-       // changeState(null)
         mediaPlayer?.pause()
-        _isPlaying.value = false
+        changeState()
     }
 
     private fun play(newTrack: Track? = null) {
@@ -84,33 +82,23 @@ class MediaViewModel(context: Application) : AndroidViewModel(context) {
             initializePlayer()
             setTrackToPlayer(newTrack)
         }
-        //changeState(newTrack)
         mediaPlayer?.start()
-        _isPlaying.value = true
+        changeState()
     }
 
-    private fun changeState(newTrack: Track?) {
-        val newTrackList = _album.value?.tracks!!.toMutableList()
-        val index = newTrackList.indexOf(track.value)
-        Log.d("MyLog", "Index track: $index")
-        if (_isPlaying.value == true) {
-            track.value?.let {
-                newTrackList[index] = track.value?.copy(isPlaying = true)!!
-            }
-
-//            newTrack?.let {
-//                val newTrackIndex = newTrackList.indexOf(newTrack)
-//                newTrackList[newTrackIndex] = newTrack.copy(isPlaying = true)
-//            }
-
-        } else {
-            track.value?.let {
-                newTrackList[index] = track.value?.copy(isPlaying = false)!!
+    private fun changeState() {
+        _isPlaying.value = mediaPlayer?.isPlaying
+        val newTracks = _album.value?.tracks!!.toMutableList()
+        album.value?.tracks?.let { list ->
+            list.forEachIndexed { index, t ->
+                if (t == track.value && mediaPlayer?.isPlaying == true) {
+                    newTracks[index] = t.copy(isPlaying = true)
+                } else {
+                    newTracks[index] = t.copy(isPlaying = false)
+                }
             }
         }
-        _album.value = album.value?.copy(
-            tracks = newTrackList
-        )
+        _album.value = album.value?.copy(tracks = newTracks)
     }
 
     private fun initializePlayer() {
